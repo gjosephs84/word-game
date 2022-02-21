@@ -1,6 +1,10 @@
 
+console.log(allWords.length);
+const winning = allWords[Math.floor(Math.random() * 2315)].toLocaleUpperCase();
+console.log(winning);
 
-const winningWord = ['A','S','P','E','N'];
+const winningWord = Array.from(winning);
+console.log(winningWord);
 let updateCounter = 1
 
 
@@ -14,6 +18,7 @@ const thirdRow = ['Z','X','C','V','B','N','M'];
 
 function App(){
     const { useState, useEffect } = React; 
+    const [message, setMessage] = React.useState(`Go ahead and guess`);
     const [attempt, setAttempt] = React.useState(1);
     const [currentGuess, setCurrentGuess] = React.useState([null, null, null, null, null]);
     const [firstGuess, setFirstGuess]  = React.useState({
@@ -47,17 +52,36 @@ function App(){
     
     //A function to check guess against winningWord
     const checkLetters = () => {
+        // Figure out which guess attempt we're on
         let [currentAttempt, setCurrentAttempt] = getAttempt();
+        // And set word to be the guess user provided
         let word = currentAttempt.guess;
+
+        // An array to hold the classnames of the letters guessed
         let newClasses = [];
         for (let i=0; i<5; i++) {
+            // A filtered array that contains matches for the ith
+            // letter in the user's word in the winning word
             let filtered = winningWord.filter(letter => letter == word[i]);
-            if (word[i] == winningWord[i]) {
-                newClasses.push('in-place');
-            } else if (filtered.length < 1) {
+            // An array to check to see if the guess has double letters
+            let filteredGuess = word.filter(letter => letter == word[i]);
+            // if the letter isn't there at all, mark it!
+            if (filtered.length < 1) {
                 newClasses.push('absent');
-            } else {
-                newClasses.push('wrong-place');
+            }
+            // Otherwise, since the letter exists, figure out if it's in
+            // the right place, provided it only occurs once
+            else {
+                if (word[i] == winningWord[i]) {
+                    newClasses.push('in-place');
+                } else {
+                    if (filteredGuess.length == 1) {
+                        newClasses.push('wrong-place');
+                    } else {
+                        newClasses.push('absent');
+                    }
+                    
+                }
             };
         };
         let newResults = currentAttempt;
@@ -133,7 +157,15 @@ function App(){
         };
         return theAttempt;
     }
-
+    //A component to relay messages to the player
+    function AspenSays() {
+        return (
+            <div>
+                <h1>Aspen says:</h1>
+                <h1>{message}</h1>
+            </div>
+        )
+    }
 
     //The Keyboard Component
     function Keyboard({letter}) {
@@ -211,10 +243,25 @@ function App(){
         </div>
         <div className="third-row">
             <button onClick={()=> {
+                let [currentAttempt, setCurrentAttempt] = getAttempt();
+                let word = currentAttempt.guess;
+                // First, figure out if it's a word in the answers array
+                let guessAsString = word.join("").toLocaleLowerCase();
+                console.log(`--------------------${guessAsString}------------`);
+                let filteredAnswers = allWords.filter(word => word == guessAsString);
+                if (filteredAnswers.length < 1) {
+                    setMessage(`That's not an accepted word`);
+                    return null;
+                }
                 checkLetters();
                 let newAttempt = attempt + 1;
+                if (newAttempt > 6) {
+                    setMessage(`The winning word was ${winning}`);
+                    return null;
+                }
                 setAttempt(newAttempt);
                 setGuessPosition(0);
+                setMessage(`If it's not all green, guess again`)
             }}>Enter</button>
             {thirdRow.map((letter) => 
             <Keyboard key={letter} letter={letter}/>)
@@ -232,6 +279,7 @@ function App(){
                 setGuessPosition(newPosition);
             }}>⌫</button>
         </div>
+        <AspenSays/>
         </>
     ); 
         
