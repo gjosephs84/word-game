@@ -61,25 +61,26 @@ h1 {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
     max-width: min-content;
-    gap: 3px;
+    gap: 2px;
 }
 .second-row {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
     max-width: min-content;
     margin-left: 15px;
-    gap: 3px;
+    gap: 2px;
 }
 .third-row {
     display: grid;
     grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1.5fr;
     max-width: min-content;
-    gap: 3px;
+    gap: 2px;
 }
 .letter {
-    width: 20px;
-    height: 40px;
-    border-radius: 3px;
+    width: 25px;
+    height: 50px;
+    border-radius: 5px;
     padding: 2px;
     margin: 2px;
+    border-style: none;
 }
