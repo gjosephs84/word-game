@@ -1,3 +1,6 @@
+// Copied from https://github.com/yyx990803/vue-wordle/blob/main/src/words.ts
+// Which copied from Wordle source
+
 const allWords = ['cigar',
 'rebut',
 'sissy',

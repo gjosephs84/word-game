@@ -18,7 +18,7 @@ const thirdRow = ['Z','X','C','V','B','N','M'];
 
 function App(){
     const { useState, useEffect } = React; 
-    const [message, setMessage] = React.useState(`Go ahead and guess`);
+    const [message, setMessage] = React.useState(null);
     const [attempt, setAttempt] = React.useState(1);
     const [currentGuess, setCurrentGuess] = React.useState([null, null, null, null, null]);
     const [firstGuess, setFirstGuess]  = React.useState({
@@ -161,8 +161,13 @@ function App(){
     function AspenSays() {
         return (
             <div>
+            {message && <div className="message">
                 <h1>Aspen says:</h1>
-                <h1>{message}</h1>
+                <h1>{message}</h1> 
+                <button onClick={() => {
+                    setMessage(null);
+                }}>Dismiss</button>
+            </div>}
             </div>
         )
     }
@@ -224,13 +229,17 @@ function App(){
 
     return(
         <>
+        <div className="container">
         <h1>It's Not Wordle, but ...</h1>
+        <div className="container">
         <UserAnswerRow attemptNumber={1} attemptGuess={firstGuess}/>
         <UserAnswerRow attemptNumber={2} attemptGuess={secondGuess}/>
         <UserAnswerRow attemptNumber={3} attemptGuess={thirdGuess}/>
         <UserAnswerRow attemptNumber={4} attemptGuess={fourthGuess}/>
         <UserAnswerRow attemptNumber={5} attemptGuess={fifthGuess}/>
         <UserAnswerRow attemptNumber={6} attemptGuess={sixthGuess}/>
+        <AspenSays/>
+        </div>
         <div className="first-row">
             {firstRow.map((letter) => 
             <Keyboard key={letter} letter={letter}/>)
@@ -242,7 +251,7 @@ function App(){
             }
         </div>
         <div className="third-row">
-            <button onClick={()=> {
+            <button className="enter" onClick={()=> {
                 let [currentAttempt, setCurrentAttempt] = getAttempt();
                 let word = currentAttempt.guess;
                 // First, figure out if it's a word in the answers array
@@ -259,14 +268,17 @@ function App(){
                     setMessage(`The winning word was ${winning}`);
                     return null;
                 }
+                if (guessAsString == winning.toLocaleUpperCase()) {
+                    setMessage(`You got it!`);
+                    return null;
+                }
                 setAttempt(newAttempt);
                 setGuessPosition(0);
-                setMessage(`If it's not all green, guess again`)
-            }}>Enter</button>
+            }}>ENTER</button>
             {thirdRow.map((letter) => 
             <Keyboard key={letter} letter={letter}/>)
             }
-            <button onClick={()=> {
+            <button className="delete" onClick={()=> {
                 if (guessPosition == 0) {
                     return null
                 };
@@ -279,7 +291,8 @@ function App(){
                 setGuessPosition(newPosition);
             }}>⌫</button>
         </div>
-        <AspenSays/>
+        
+        </div>
         </>
     ); 
         
