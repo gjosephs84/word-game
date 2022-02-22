@@ -162,11 +162,10 @@ function App(){
         return (
             <div>
             {message && <div className="message">
-                <h1>Aspen says:</h1>
-                <h1>{message}</h1> 
-                <button onClick={() => {
+                <h4>{message}</h4> 
+                <div className="container"><button className="dismiss" onClick={() => {
                     setMessage(null);
-                }}>Dismiss</button>
+                }}>Dismiss</button></div>
             </div>}
             </div>
         )

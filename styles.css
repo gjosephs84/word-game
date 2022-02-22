@@ -1,6 +1,11 @@
 h1 {
     color:#8ca49c;
     margin: auto;
+    text-align: center;
+    padding: 10px;
+}
+h4 {
+    color: white;
 }
 .container {
     max-width: min-content;
@@ -109,7 +114,19 @@ h1 {
 .message {
     position:absolute;
     top:120px;
-    background-color: cadetblue;
-   
+    left: 262px;
+    width: 160px;
+    background-color: #536872;
+    margin: auto;
     z-index: 999;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+}
+.dismiss {
+    border-radius: 5px;
+    border-style: none;
+    background-color: #afc3cc;
+    margin-bottom: 10px;
+    height: 30px;
 }
