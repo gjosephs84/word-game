@@ -114,10 +114,12 @@ h4 {
 .message {
     position:absolute;
     top:120px;
-    left: 262px;
+    left: 0;
+    right: 0;
     width: 160px;
     background-color: #536872;
-    margin: auto;
+    margin-left: auto;
+    margin-right: auto;
     z-index: 999;
     border-radius: 5px;
     padding: 10px;
