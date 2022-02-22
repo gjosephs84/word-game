@@ -1,11 +1,6 @@
 
-console.log(allWords.length);
 const winning = allWords[Math.floor(Math.random() * 2315)].toLocaleUpperCase();
-console.log(winning);
-
 const winningWord = Array.from(winning);
-console.log(winningWord);
-let updateCounter = 1
 
 
 
@@ -87,14 +82,9 @@ function App(){
         let newResults = currentAttempt;
         newResults.result = newClasses;
         setCurrentAttempt(newResults);
-    }
-    
-    
+    } 
     
     //A function to figure out the attempt for the keyboard onClick
-
-
-
     const getAttempt = () => {
         let theAttempt, setTheAttempt;
         switch (attempt) {
@@ -130,33 +120,6 @@ function App(){
         return [theAttempt, setTheAttempt];
     };
 
-    const getRowState = (attemptNumber) => {
-        let theAttempt;
-        switch (attemptNumber) {
-            case 1 : 
-                theAttempt = firstGuess;
-                break;
-            case 2 : 
-                theAttempt = secondGuess;
-                break;
-            case 3 : 
-                theAttempt = thirdGuess;
-                break;
-            case 4 : 
-                theAttempt = fourthGuess;
-                break;
-            case 5 : 
-                theAttempt = fifthGuess;
-                break;
-            case 6 : 
-                theAttempt = sixthGuess;
-                break;
-            default : 
-                theAttempt = firstGuess;
-                break;
-        };
-        return theAttempt;
-    }
     //A component to relay messages to the player
     function AspenSays() {
         return (
@@ -173,23 +136,16 @@ function App(){
 
     //The Keyboard Component
     function Keyboard({letter}) {
-        console.log('Rendereding keyboard ------------------');
         return (
             <button className="letter" id={letter} onClick={(e) => {
                 let [currentAttempt, setCurrentAttempt] = getAttempt();
-                console.log(currentAttempt);
-                console.log(setCurrentAttempt);
                 if (guessPosition == 5) {
                     return null;
                 }
                 let newGuess = currentAttempt;
                 newGuess.guess.splice(guessPosition, 1, e.target.innerText);
-               
                 setCurrentAttempt(newGuess);
                 let currentPosition = guessPosition
-                console.log(`Current Guess is ${currentGuess}`);
-                console.log(`CurrentAttempt is ${currentAttempt}`);
-                
                 setGuessPosition(currentPosition + 1);
                 
             }}>{letter}</button>
@@ -198,8 +154,6 @@ function App(){
 
     //A component to make a letter box in a guess row
     function LetterBox({position, attemptNumber, guessed, letterClass}) {
-        console.log(`Rendering ${attemptNumber} - ${position}`);
-        console.log(`Guess passed in is ${guessed}`);
         return (
             <div className={letterClass}>{guessed}</div>
         )
@@ -209,11 +163,6 @@ function App(){
 
     //A component to create a guess row
     function UserAnswerRow({attemptNumber, attemptGuess}) {
-        console.log(`----------------------Rendering row ${attemptNumber}`);
-        console.log(firstGuess);
-        console.log(secondGuess);
-        console.log(thirdGuess);
-        
             return (
                 <div className="guesses">
                     {attemptGuess.guess.map((guessedLetter, index) => 
@@ -221,7 +170,6 @@ function App(){
                     )}  
                 </div>
             )
-        
     }
 
 
@@ -255,7 +203,6 @@ function App(){
                 let word = currentAttempt.guess;
                 // First, figure out if it's a word in the answers array
                 let guessAsString = word.join("").toLocaleLowerCase();
-                console.log(`--------------------${guessAsString}------------`);
                 let filteredAnswers = allWords.filter(word => word == guessAsString);
                 if (filteredAnswers.length < 1) {
                     setMessage(`That's not an accepted word`);
@@ -284,7 +231,6 @@ function App(){
                 let [currentAttempt, setCurrentAttempt] = getAttempt();
                 let newGuess = currentAttempt;
                 newGuess.guess.splice((guessPosition - 1), 1, null);
-                console.log(`In the delete function, newGuess is ${newGuess}`);
                 setCurrentAttempt(newGuess);
                 let newPosition = guessPosition - 1;
                 setGuessPosition(newPosition);
