@@ -72,11 +72,12 @@ function App(){
                 newClasses.push('absent');
             }
             // Otherwise, since the letter exists, figure out if it's in
-            // the right place, provided it only occurs once
+            // the right place
             else {
                 if (word[i] == winningWord[i]) {
                     newClasses.push('in-place');
                     lettersMarked.push(word[i]);
+                // And if it occurs more than once in the user's guess, handle that
                 } else {
                     if (winningWord.includes(word[i])) {
                         if (lettersMarked.includes(word[i]) == false) {
@@ -169,8 +170,6 @@ function App(){
         )
     }
 
-
-
     //A component to create a guess row
     function UserAnswerRow({attemptNumber, attemptGuess}) {
             return (
@@ -181,8 +180,6 @@ function App(){
                 </div>
             )
     }
-
-
 
     return(
         <>
@@ -224,7 +221,7 @@ function App(){
                     setMessage(`The winning word was ${winning}`);
                     return null;
                 }
-                if (guessAsString == winning.toLocaleUpperCase()) {
+                if (guessAsString.toLocaleUpperCase() == winning) {
                     setMessage(`You got it!`);
                     return null;
                 }
