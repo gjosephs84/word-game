@@ -1,21 +1,28 @@
 
+// Get the winning word on page load
 const winning = allWords[Math.floor(Math.random() * 2315)].toLocaleUpperCase();
 const winningWord = Array.from(winning);
 
-
-
-
+// Arrays for generating the three rows of the keyboard
 const firstRow = ['Q','W','E','R','T','Y','U','I','O','P'];
 const secondRow = ['A','S','D','F','G','H','J','K','L'];
 const thirdRow = ['Z','X','C','V','B','N','M'];
 
-
-
+// The parent App component, currently holding all state variables
 function App(){
+    
+    // Brought in, even though useEffect is not presently being used
     const { useState, useEffect } = React; 
+
+    // Holds error messages/the solution after attempt number six
     const [message, setMessage] = React.useState(null);
+
+    // Determines the guess number (1-6)
     const [attempt, setAttempt] = React.useState(1);
-    const [currentGuess, setCurrentGuess] = React.useState([null, null, null, null, null]);
+   
+    // State variables to hold each of six guesses AND their eventual results
+    // where guess.result is an array of classNames which will show green, yellow,
+    // or grey based on letter placement after users enter a guess.
     const [firstGuess, setFirstGuess]  = React.useState({
         guess: [null, null, null, null, null],
         result: ['empty','empty','empty','empty','empty']
@@ -41,11 +48,10 @@ function App(){
         result: ['empty','empty','empty','empty','empty']
     });
     
-    
-    
+    // Determines the index position of current guess (0-4)
     const [guessPosition, setGuessPosition] = React.useState(0)
     
-    //A function to check guess against winningWord
+    // A function to check guess against winningWord
     const checkLetters = () => {
         // Figure out which guess attempt we're on
         let [currentAttempt, setCurrentAttempt] = getAttempt();
@@ -54,6 +60,7 @@ function App(){
 
         // An array to hold the classnames of the letters guessed
         let newClasses = [];
+        let lettersMarked = [];
         for (let i=0; i<5; i++) {
             // A filtered array that contains matches for the ith
             // letter in the user's word in the winning word
@@ -69,13 +76,16 @@ function App(){
             else {
                 if (word[i] == winningWord[i]) {
                     newClasses.push('in-place');
+                    lettersMarked.push(word[i]);
                 } else {
-                    if (filteredGuess.length == 1) {
-                        newClasses.push('wrong-place');
-                    } else {
-                        newClasses.push('absent');
+                    if (winningWord.includes(word[i])) {
+                        if (lettersMarked.includes(word[i]) == false) {
+                            newClasses.push('wrong-place');
+                            lettersMarked.push(word[i]);
+                        } else {
+                            newClasses.push('absent');
+                        }
                     }
-                    
                 }
             };
         };
