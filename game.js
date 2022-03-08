@@ -4,9 +4,15 @@ const winning = allWords[Math.floor(Math.random() * 2315)].toLocaleUpperCase();
 const winningWord = Array.from(winning);
 
 // Arrays for generating the three rows of the keyboard
-const firstRow = ['Q','W','E','R','T','Y','U','I','O','P'];
-const secondRow = ['A','S','D','F','G','H','J','K','L'];
-const thirdRow = ['Z','X','C','V','B','N','M'];
+const firstRow = {  letters:    ['Q','W','E','R','T','Y','U','I','O','P'],
+                    result:     ['ug','ug','ug','ug','ug','ug','ug','ug','ug','ug']};
+const secondRow = { letters:    ['A','S','D','F','G','H','J','K','L'],
+                    result:     ['ug','ug','ug','ug','ug','ug','ug','ug','ug']};
+const thirdRow = {  letters:    ['Z','X','C','V','B','N','M'],
+                    result:     ['ug','ug','ug','ug','ug','ug','ug']};
+
+// An array to hold all guessed letters
+const guessedLetters = [];
 
 // The parent App component, currently holding all state variables
 function App(){
@@ -60,6 +66,7 @@ function App(){
 
         // An array to hold the classnames of the letters guessed
         let newClasses = [];
+        let newKeyboardClasses=[];
         let lettersMarked = [];
         for (let i=0; i<5; i++) {
             // A filtered array that contains matches for the ith
@@ -70,21 +77,25 @@ function App(){
             // if the letter isn't there at all, mark it!
             if (filtered.length < 1) {
                 newClasses.push('absent');
+                newKeyboardClasses.push('ab');
             }
             // Otherwise, since the letter exists, figure out if it's in
             // the right place
             else {
                 if (word[i] == winningWord[i]) {
                     newClasses.push('in-place');
+                    newKeyboardClasses.push('ip');
                     lettersMarked.push(word[i]);
                 // And if it occurs more than once in the user's guess, handle that
                 } else {
                     if (winningWord.includes(word[i])) {
                         if (lettersMarked.includes(word[i]) == false) {
                             newClasses.push('wrong-place');
+                            newKeyboardClasses.push('wp');
                             lettersMarked.push(word[i]);
                         } else {
                             newClasses.push('absent');
+                            newKeyboardClasses.push('ab');
                         }
                     }
                 }
@@ -92,6 +103,58 @@ function App(){
         };
         let newResults = currentAttempt;
         newResults.result = newClasses;
+        // Mark results on the keyboard
+        // Check first row
+        for (let i = 0; i < 5; i++) {
+            for (let j = 0; j < firstRow.letters.length; j++) {
+                let previousResult = firstRow.result[j];
+                if (word[i] == firstRow.letters[j]) {
+                    if (previousResult != 'ip') {
+                    console.log(`Checking ${word[i]} against ${firstRow.letters[j]} and marking it as ${newKeyboardClasses[i]}`);
+                    firstRow.result[j] = newKeyboardClasses[i];
+                    };
+                    if ((previousResult == 'wp') && (newKeyboardClasses[i] == 'ab')) {
+                        firstRow.result[j] = 'wp';
+                    }
+                }
+            }
+            console.log(`First Row Results are ${firstRow.result}`);
+            console.log(`New Keyboard Classes is ${newKeyboardClasses}`);
+        }
+        // Check second row
+        for (let i = 0; i < 5; i++) {
+            for (let j = 0; j < secondRow.letters.length; j++) {
+                let previousResult = secondRow.result[j];
+                if (word[i] == secondRow.letters[j]) {
+                    if (previousResult != 'ip') {
+                    console.log(`Checking ${word[i]} against ${secondRow.letters[j]} and marking it as ${newKeyboardClasses[i]}`);
+                    secondRow.result[j] = newKeyboardClasses[i];
+                    };
+                    if ((previousResult == 'wp') && (newKeyboardClasses[i] == 'ab')) {
+                        secondRow.result[j] = 'wp';
+                    }
+                }
+            }
+            console.log(`First Row Results are ${secondRow.result}`);
+            console.log(`New Keyboard Classes is ${newKeyboardClasses}`);
+        }
+        // Check third row
+        for (let i = 0; i < 5; i++) {
+            for (let j = 0; j < thirdRow.letters.length; j++) {
+                let previousResult = thirdRow.result[j];
+                if (word[i] == thirdRow.letters[j]) {
+                    if (previousResult != 'ip') {
+                    console.log(`Checking ${word[i]} against ${thirdRow.letters[j]} and marking it as ${newKeyboardClasses[i]}`);
+                    thirdRow.result[j] = newKeyboardClasses[i];
+                    };
+                    if ((previousResult == 'wp') && (newKeyboardClasses[i] == 'ab')) {
+                        thirdRow.result[j] = 'wp';
+                    }
+                }
+            }
+            console.log(`First Row Results are ${thirdRow.result}`);
+            console.log(`New Keyboard Classes is ${newKeyboardClasses}`);
+        }
         setCurrentAttempt(newResults);
     } 
     
@@ -146,9 +209,9 @@ function App(){
     }
 
     //The Keyboard Component
-    function Keyboard({letter}) {
+    function Keyboard({letter, index, classArray}) {
         return (
-            <button className="letter" id={letter} onClick={(e) => {
+            <button className={classArray[index]} id={letter} onClick={(e) => {
                 let [currentAttempt, setCurrentAttempt] = getAttempt();
                 if (guessPosition == 5) {
                     return null;
@@ -195,13 +258,13 @@ function App(){
         <AspenSays/>
         </div>
         <div className="first-row">
-            {firstRow.map((letter) => 
-            <Keyboard key={letter} letter={letter}/>)
+            {firstRow.letters.map((letter, index) => 
+            <Keyboard key={letter} letter={letter} index={index} classArray={firstRow.result}/>)
             }
         </div>
         <div className="second-row">
-            {secondRow.map((letter) => 
-            <Keyboard key={letter} letter={letter}/>)
+            {secondRow.letters.map((letter, index) => 
+            <Keyboard key={letter} letter={letter} index={index} classArray={secondRow.result}/>)
             }
         </div>
         <div className="third-row">
@@ -228,8 +291,8 @@ function App(){
                 setAttempt(newAttempt);
                 setGuessPosition(0);
             }}>ENTER</button>
-            {thirdRow.map((letter) => 
-            <Keyboard key={letter} letter={letter}/>)
+            {thirdRow.letters.map((letter, index) => 
+            <Keyboard key={letter} letter={letter} index={index} classArray={thirdRow.result}/>)
             }
             <button className="delete" onClick={()=> {
                 if (guessPosition == 0) {
